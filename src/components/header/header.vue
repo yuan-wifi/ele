@@ -17,7 +17,7 @@
           <span class="text">{{ seller.supports[0].description }}</span>
         </div>
       </div>
-      <div class="support-count" v-if="seller.supports">
+      <div class="support-count" v-if="seller.supports" @click="detailShow=true">
         <span class="count">{{ seller.supports.length }}个</span>
         <i class="icon-keyboard_arrow_right"></i>
       </div>
@@ -28,6 +28,16 @@
     </div>
     <div class="background">
       <img :src="seller.avatar" >
+    </div>
+    <div class="detail" v-show="detailShow">
+      <div class="detail-wrapper clearfix">
+         <div class="detail-main">
+           <h1 class="name">{{ seller.name }}</h1>
+         </div>
+      </div>
+      <div class="detail-close" @click="detailShow=false">
+        <i class="icon-close"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +52,11 @@ export default {
   },
   created () {
     this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  },
+  data () {
+    return {
+      detailShow: false
+    }
   }
 }
 </script>
@@ -167,4 +182,32 @@ export default {
       img
         width: 100%
         height: 100%
+    .detail
+      position: fixed
+      z-index: 100
+      width: 100%
+      height: 100%
+      overflow: auto
+      top: 0
+      left: 0
+      background: rgba(7, 17, 27, 0.8)
+      .detail-wrapper
+        min-height: 100%
+        width: 100%
+        .detail-main
+          margin-top: 64px
+          padding-bottom: 64px
+          .name
+          line-height: 16px
+          text-align: 16px
+          font-size: 16px
+          font-weight: 700
+      .detail-close
+        position: relative
+        margin: -64px auto 0 auto
+        line-height: 32px
+        width: 32px
+        height: 32px
+        clear: both
+        font-size: 32px
 </style>
