@@ -31,9 +31,12 @@
     </div>
     <div class="detail" v-show="detailShow">
       <div class="detail-wrapper clearfix">
-         <div class="detail-main">
-           <h1 class="name">{{ seller.name }}</h1>
-         </div>
+        <div class="detail-main">
+          <h1 class="name">{{ seller.name }}</h1>
+          <div class="star-wrapper">
+            <v-star :score="seller.score" :size="48"></v-star>
+          </div>
+        </div>
       </div>
       <div class="detail-close" @click="detailShow=false">
         <i class="icon-close"></i>
@@ -43,6 +46,8 @@
 </template>
 
 <script>
+import star from '../star/star'
+
 export default {
   name: 'header',
   props: {
@@ -57,6 +62,9 @@ export default {
     return {
       detailShow: false
     }
+  },
+  components: {
+    'v-star': star
   }
 }
 </script>
@@ -198,10 +206,14 @@ export default {
           margin-top: 64px
           padding-bottom: 64px
           .name
-          line-height: 16px
-          text-align: 16px
-          font-size: 16px
-          font-weight: 700
+            line-height: 16px
+            text-align: center
+            font-size: 16px
+            font-weight: 700
+          .star-wrapper
+            margin-top: 18px
+            padding: 2px 0
+            text-align: center
       .detail-close
         position: relative
         margin: -64px auto 0 auto
