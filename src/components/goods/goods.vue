@@ -3,7 +3,7 @@
     <div class="menu-wrapper">
       <ul>
         <li v-for="item in goods" :key="item.id" class="menu-item">
-          <span class="name"><span v-if="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}</span>
+          <span class="text border-1px"><span v-if="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}</span>
         </li>
       </ul>
     </div>
@@ -44,31 +44,43 @@ export default {
     display: flex
     position: absolute
     top: 174px
-    bottom: 58px
+    bottom: 46px
     width: 100%
     .menu-wrapper
       flex: 0 0 80px
       background: #f3f5f7
       width: 80px
       .menu-item
+        display: table
+        height: 54px
+        width: 56px
+        line-height: 14px
+        padding: 0 12px
         .icon
           vertical-align: top
           display: inline-block
           width: 12px
           height: 12px
-          margin-right: 4px
+          font-size: 12px
+          margin-right: 2px
           background-size: 12px 12px
           background-repeat: no-repeat
           &.decrease
-            bg-image('decrease_1')
+            bg-image('decrease_3')
           &.discount
-            bg-image('discount_1')
+            bg-image('discount_3')
           &.guarantee
-            bg-image('guarantee_1')
+            bg-image('guarantee_3')
           &.invoice
-            bg-image('invoice_1')
+            bg-image('invoice_3')
           &.special
-            bg-image('special_1')
+            bg-image('special_3')
+        .text
+          display: table-cell
+          width: 56px
+          vertical-align: middle
+          font-size: 12px
+          border-1px(rgba(7, 17, 27, 0.1))
     .foods-wrapper
       flex: 1
 </style>
