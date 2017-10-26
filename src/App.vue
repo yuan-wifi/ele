@@ -42,15 +42,6 @@ export default {
     // 获取商家信息
     this.$axios.get('/api/seller').then((response) => {
       this.seller = response.data.data
-      console.log(this.seller)
-    }, (error) => {
-      console.log(error)
-    })
-
-    // 调用商品信息
-    this.$axios.get('/api/goods').then((response) => {
-      this.goods = response.data
-      console.log(this.goods)
     }, (error) => {
       console.log(error)
     })
@@ -58,7 +49,6 @@ export default {
     // 获取评论信息
     this.$axios.get('/api/ratings').then((response) => {
       this.ratings = response.data
-      console.log(this.ratings)
     }, (error) => {
       console.log(error)
     })
