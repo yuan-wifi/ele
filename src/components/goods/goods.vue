@@ -3,7 +3,9 @@
     <div class="menu-wrapper">
       <ul>
         <li v-for="item in goods" :key="item.id" class="menu-item">
-          <span class="text border-1px"><span v-if="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}</span>
+          <span class="text border-1px">
+            <iconType :size="3" :type="item.type" :right="2" :font="12"></iconType>{{ item.name }}
+          </span>
         </li>
       </ul>
     </div>
@@ -12,6 +14,8 @@
 </template>
 
 <script>
+import iconType from '../icon/iconType'
+
 export default {
   name: 'goods',
   props: {
@@ -31,7 +35,9 @@ export default {
     }, (error) => {
       console.log(error)
     })
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
+  },
+  components: {
+    iconType
   }
 }
 </script>
@@ -56,25 +62,6 @@ export default {
         width: 56px
         line-height: 14px
         padding: 0 12px
-        .icon
-          vertical-align: top
-          display: inline-block
-          width: 12px
-          height: 12px
-          font-size: 12px
-          margin-right: 2px
-          background-size: 12px 12px
-          background-repeat: no-repeat
-          &.decrease
-            bg-image('decrease_3')
-          &.discount
-            bg-image('discount_3')
-          &.guarantee
-            bg-image('guarantee_3')
-          &.invoice
-            bg-image('invoice_3')
-          &.special
-            bg-image('special_3')
         .text
           display: table-cell
           width: 56px

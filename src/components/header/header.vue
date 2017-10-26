@@ -13,7 +13,7 @@
           {{ seller.description }}/{{ seller.deliveryTime }}分钟送达
         </div>
         <div class="support" v-if="seller.supports">
-  		    <span class="icon" :class="classMap[seller.supports[0].type]"></span>
+          <iconType :size="1" :type="seller.supports[0].type" :right="4" :font="12"></iconType>
           <span class="text">{{ seller.supports[0].description }}</span>
         </div>
       </div>
@@ -44,7 +44,7 @@
           </div>
           <ul class="supports" v-if="seller.supports">
             <li class="support-item" v-for="(item, index) in seller.supports">
-              <span class="icon" :class="classMap[item.type]"></span>
+              <iconType :size="1" :type="item.type" :right="6" :font="16"></iconType>
               <span class="text">{{ item.description }}</span>
             </li>
           </ul>
@@ -68,6 +68,7 @@
 
 <script>
 import star from '../star/star'
+import iconType from '../icon/iconType'
 
 export default {
   name: 'header',
@@ -76,16 +77,14 @@ export default {
       type: Object
     }
   },
-  created () {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
-  },
   data () {
     return {
       detailShow: false
     }
   },
   components: {
-    'v-star': star
+    'v-star': star,
+    iconType
   }
 }
 </script>
@@ -134,24 +133,6 @@ export default {
           font-size: 12px
           line-height: 12px
         .support
-          .icon
-            vertical-align: top
-            display: inline-block
-            width: 12px
-            height: 12px
-            margin-right: 4px
-            background-size: 12px 12px
-            background-repeat: no-repeat
-            &.decrease
-              bg-image('decrease_1')
-            &.discount
-              bg-image('discount_1')
-            &.guarantee
-              bg-image('guarantee_1')
-            &.invoice
-              bg-image('invoice_1')
-            &.special
-              bg-image('special_1')
           .text
             line-height: 12px
             font-size: 10px
@@ -265,24 +246,6 @@ export default {
               font-size: 0
               &:last-child
                 margin-bottom: 0
-              .icon
-                display: inline-block
-                width: 16px
-                height: 16px
-                vertical-align: top
-                margin-right: 6px
-                background-size: 16px 16px
-                background-repeat: no-repeat
-                &.decrease
-                  bg-image('decrease_1')
-                &.discount
-                  bg-image('discount_1')
-                &.guarantee
-                  bg-image('guarantee_1')
-                &.invoice
-                  bg-image('invoice_1')
-                &.special
-                  bg-image('special_1')
               .text
                 display: inline-block
                 font-size: 12px
