@@ -28,13 +28,16 @@
                   ￥<span class="now-price">{{ food.price }}</span>
                   <span v-show="food.oldPrice" class="old-price">￥{{ food.oldPrice }}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -42,6 +45,7 @@
 import iconType from '../icon/iconType'
 import BScroll from 'better-scroll'
 import shopcart from '../shopcart/shopcart'
+import cartcontrol from '../cartcontrol/cartcontrol'
 
 export default {
   name: 'goods',
@@ -71,7 +75,8 @@ export default {
   },
   components: {
     iconType,
-    shopcart
+    shopcart,
+    cartcontrol
   },
   methods: {
     _initScroll () {
@@ -80,7 +85,8 @@ export default {
       })
 
       this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
-        probeType: 3
+        probeType: 3,
+        click: true
       })
 
       this.foodsScroll.on('scroll', (pos) => {
@@ -104,7 +110,6 @@ export default {
       let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
       let el = foodList[index]
       this.foodsScroll.scrollToElement(el, 300)
-      console.log(index)
     }
   },
   computed: {
@@ -117,6 +122,17 @@ export default {
         }
       }
       return 0
+    },
+    selectFoods () {
+      let foods = []
+      this.goods.forEach((good, index) => {
+        good.foods.forEach((food, findex) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
     }
   }
 }
@@ -214,4 +230,8 @@ export default {
               color: rgb(147, 153, 159)
               font-weight: 700
               text-decoration: line-through
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0px
+            bottom: 12px
 </style>
