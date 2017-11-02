@@ -1,17 +1,18 @@
 <template>
   <div class="cartcontrol">
     <transition name="move">
-      <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart()">
+      <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
         <span class="inner icon-remove_circle_outline"></span>
       </div>
     </transition>
     <div class="cart-count" v-show="food.count>0">{{ food.count }}</div>
-    <div class="cart-add icon-add_circle" @click="addCart()"></div>
+    <div class="cart-add icon-add_circle" @click="addCart"></div>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import { bus } from '../bus.js'
 
 export default {
   name: 'cartcontrol',
@@ -21,13 +22,11 @@ export default {
     }
   },
   created () {
-    this.$nextTick(() => {
-      console.log(this.food.count)
-    })
+    this.$nextTick(() => {})
   },
   methods: {
-    addCart () {
-      if (!event._constructed) {
+    addCart (event1) {
+      if (!event1._constructed) {
         return false
       }
       if (!this.food.count) {
@@ -35,8 +34,10 @@ export default {
       } else {
         this.food.count++
       }
+
+      bus.$emit('cart-add', event1.target)
     },
-    decreaseCart () {
+    decreaseCart (event) {
       if (!event._constructed) {
         return false
       }

@@ -37,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -46,6 +46,7 @@ import iconType from '../icon/iconType'
 import BScroll from 'better-scroll'
 import shopcart from '../shopcart/shopcart'
 import cartcontrol from '../cartcontrol/cartcontrol'
+import { bus } from '../bus.js'
 
 export default {
   name: 'goods',
@@ -72,6 +73,9 @@ export default {
     }, (error) => {
       console.log(error)
     })
+    bus.$on('cart-add', (target) => {
+      this._drop(target)
+    })
   },
   components: {
     iconType,
@@ -79,6 +83,12 @@ export default {
     cartcontrol
   },
   methods: {
+    _drop (target) {
+      // 体验优化,异步执行下落动画
+      this.$nextTick(() => {
+        this.$refs.shopcart.drop(target)
+      })
+    },
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         click: true

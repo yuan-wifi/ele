@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{'highlight':totalCount>0}">
@@ -19,10 +19,37 @@
         <div class="pay" v-if="payDesc>0">还差￥{{ payDesc }}元起送</div>
       </div>
     </div>
+    <div class="ball-container">
+      <transition name="drop" v-for="ball in balls" :key="ball.id" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+        <div class="ball" v-show="ball.show">
+          <div class="inner inner-hook">
+          </div>
+        </div>
+      </transition>
+    </div>
+    <div class="shopcart-list" v-show="listShow">
+      <div class="list-header">
+        <h1 class="title"></h1>
+        <span class="empty"></span>
+      </div>
+      <div class="list-content">
+        <li class="food" v-for="food in selectFoods">
+          <span class="name">{{ food.name }}</span>
+          <div class="price">
+            <span>￥{{ food.price*food.count }}</span>
+          </div>
+          <div class="cartcontrol-wrapper">
+            <cartcontrol :food="food"></cartcontrol>
+          </div>
+        </li>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import cartcontrol from '../cartcontrol/cartcontrol'
+
 export default {
   name: 'shopcart',
   props: {
@@ -39,6 +66,19 @@ export default {
       default () {
         return []
       }
+    }
+  },
+  data () {
+    return {
+      balls: [
+        {'show': false},
+        {'show': false},
+        {'show': false},
+        {'show': false},
+        {'show': false}
+      ],
+      dropBalls: [],
+      fold: false
     }
   },
   computed: {
@@ -62,13 +102,79 @@ export default {
       } else {
         if (this.totalPrice < this.minPrice) {
           let money = this.minPrice - this.totalPrice
-          console.log(money)
           return money
         } else {
           return -1
         }
       }
+    },
+    listShow () {
+      if (!this.totalCount) {
+        this.fold = true
+        return false
+      }
+      let show = !this.fold
+      return show
     }
+  },
+  methods: {
+    drop (el) {
+      // 触发一次事件将会将所有小球进行遍历
+      for (let i = 0; i < this.balls.length; i++) {
+        let ball = this.balls[i]
+        if (!ball.show) {
+          ball.show = true
+          ball.el = el
+          this.dropBalls.push(ball)
+          return
+        }
+      }
+    },
+    beforeEnter (el) {
+      let count = this.balls.length
+      while (count--) {
+        let ball = this.balls[count]
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect() // 获取小球的相当于适口的位置
+          let x = rect.left - 32
+          let y = -(window.innerHeight - rect.top - 22)
+          el.style.display = ''
+          el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
+          el.style.transform = `translate3d(0, ${y}px, 0)`
+          let inner = el.getElementsByClassName('inner-hook')[0]
+          inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`
+          inner.style.transform = `translate3d(${x}px, 0, 0)`
+        }
+      }
+    },
+    enter (el, done) {
+      /* eslint-disable no-unused-vars */
+      let rf = el.offsetHeight
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0, 0, 0)'
+        el.style.transform = 'translate3d(0, 0, 0)'
+        let inner = el.getElementsByClassName('inner-hook')[0]
+        inner.style.webkitTransform = 'translate3d(0, 0, 0)'
+        inner.style.transform = 'translate3d(0, 0, 0)'
+        el.addEventListener('transitionend', done)
+      })
+    },
+    afterEnter (el) {
+      let ball = this.dropBalls.shift()
+      if (ball) {
+        ball.show = false
+        el.style.display = 'none'
+      }
+    },
+    toggleList () {
+      if (!this.totalCount) {
+        return
+      }
+      this.fold = !this.fold
+    }
+  },
+  components: {
+    cartcontrol
   }
 }
 </script>
@@ -164,4 +270,24 @@ export default {
             color: #fff
         &.highlight
           background: #00b43c
+    .ball-container
+      .ball
+        position fixed
+        left: 32px
+        bottom: 22px
+        z-index:200
+        transition: all .6s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+        .inner
+          width 16px
+          height 16px
+          border-radius 50%
+          background rgb(0,160,220)
+          transition: all .6s linear
+    .shopcart-list
+      position: absolute
+      top: 0
+      left: 0
+      z-index: -1
+      width: 100%
+      
 </style>
