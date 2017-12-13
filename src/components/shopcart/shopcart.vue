@@ -27,23 +27,27 @@
         </div>
       </transition>
     </div>
-    <div class="shopcart-list" v-show="listShow">
-      <div class="list-header">
-        <h1 class="title"></h1>
-        <span class="empty"></span>
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listShow" >
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content">
+          <ul>
+            <li class="food" v-for="food in selectFoods" :key="food.id">
+              <span class="name">{{ food.name }}</span>
+              <div class="price">
+                <span>￥{{ food.price*food.count }}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="list-content">
-        <li class="food" v-for="food in selectFoods">
-          <span class="name">{{ food.name }}</span>
-          <div class="price">
-            <span>￥{{ food.price*food.count }}</span>
-          </div>
-          <div class="cartcontrol-wrapper">
-            <cartcontrol :food="food"></cartcontrol>
-          </div>
-        </li>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -168,7 +172,7 @@ export default {
     },
     toggleList () {
       if (!this.totalCount) {
-        return
+        return false
       }
       this.fold = !this.fold
     }
@@ -289,5 +293,12 @@ export default {
       left: 0
       z-index: -1
       width: 100%
-      
+    .fold-enter-active, .fold-leave-active
+      transition: all .5s
+      transform: translate3d(0, -100%, 0)
+    .fold-enter, .fold-leave-to
+      transform: translate3d(0, 0, 0)
+    .fold-enter-to
+      transform: translate3d(0, -100%, 0)
+
 </style>
